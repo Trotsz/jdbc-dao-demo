@@ -1,6 +1,12 @@
 # Compiled class file
 *.class
 
+# IntelliJ
+out
+.idea
+db.properties
+
+
 # Log file
 *.log
 
