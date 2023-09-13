@@ -2,6 +2,7 @@ package model.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Department implements Serializable {
@@ -10,12 +11,12 @@ public class Department implements Serializable {
     private Integer id;
     private String name;
 
-    //private List<Seller> sellers;
+    private List<Seller> sellers;
 
     public Department(Integer id, String name) {
         this.id = id;
         this.name = name;
-        //this.sellers = new ArrayList<>();
+        this.sellers = new ArrayList<>();
     }
 
     public Integer getId() {
@@ -23,12 +24,12 @@ public class Department implements Serializable {
     }
 
     public String getName() {
-        return this.getName();
+        return this.name;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id);
+        return Objects.hash(this.getId());
     }
 
     @Override
