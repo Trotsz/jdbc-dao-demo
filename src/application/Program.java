@@ -9,9 +9,9 @@ import java.sql.Statement;
 
 public class Program {
     public static void main(String[] args) {
-        Connection conn;
-        Statement st;
-        ResultSet rs;
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
 
         try {
             conn = DB.getConnection();
@@ -31,6 +31,10 @@ public class Program {
             }
         } catch(SQLException e) {
             System.out.println(e.getMessage());
+        } finally {
+            DB.closeResultSet(rs);
+            DB.closeStatement(st);
+            DB.closeConnection();
         }
     }
 }
