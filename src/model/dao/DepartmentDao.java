@@ -10,5 +10,4 @@ public interface DepartmentDao {
     void deleteById(Integer id);
     Department findById(Integer id);
     List<Department> findAll();
-
 }
