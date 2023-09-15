@@ -96,7 +96,8 @@ public class SellerDaoJDBC implements SellerDao {
                     map.put(dep.getId(), dep);
                 }
 
-                sellers.add(this.instantiateSeller(rs, dep));
+                Seller seller = this.instantiateSeller(rs, dep);
+                sellers.add(seller);
             }
 
             return sellers;
@@ -111,7 +112,36 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public List<Seller> findAll() {
-        return null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        List<Seller> sellers = new ArrayList<>();
+
+        try {
+            st = this.conn.createStatement();
+            rs = st.executeQuery(
+                    "SELECT seller.*, department.Name as DepName FROM seller "
+                    + "INNER JOIN department ON seller.DepartmentId = department.Id "
+                    + "ORDER BY Id"
+            );
+
+            Map<Integer, Department> departs = new HashMap<>();
+
+            while(rs.next()) {
+                if(!departs.containsKey(rs.getInt("DepartmentId"))) {
+                    departs.put(rs.getInt("DepartmentId"), this.instantiateDepartment(rs));
+                }
+
+                sellers.add(this.instantiateSeller(rs, departs.get(rs.getInt("DepartmentId"))));
+            }
+
+            return sellers;
+        } catch(SQLException e) {
+            throw new DbException("Error while trying to select all elements from table seller.");
+        } finally {
+            DB.closeResultSet(rs);
+            DB.closeStatement(st);
+        }
     }
 
     private Seller instantiateSeller(ResultSet rs, Department dep) throws SQLException {
