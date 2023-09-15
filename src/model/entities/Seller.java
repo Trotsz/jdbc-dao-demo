@@ -1,6 +1,7 @@
 package model.entities;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -63,6 +64,6 @@ public class Seller implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Id: %s, Name: %s | Email: %s", this.getId(), this.getName(), this.getEmail());
+        return String.format("Id: %s, Name: %s | Email: %s | Birth Date: %s | Base Salary: %.2f | Department Id: %d", this.getId(), this.getName(), this.getEmail(), new SimpleDateFormat("dd/MM/yyyy").format(this.getBirthDate()), this.getBaseSalary(), this.getDepartment().getId());
     }
 }

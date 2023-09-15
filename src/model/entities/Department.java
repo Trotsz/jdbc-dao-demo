@@ -27,6 +27,10 @@ public class Department implements Serializable {
         return this.name;
     }
 
+    public List<Seller> getSellers() {
+        return this.sellers;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(this.getId());

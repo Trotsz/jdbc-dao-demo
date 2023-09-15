@@ -7,7 +7,10 @@ import model.entities.Department;
 import model.entities.Seller;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SellerDaoJDBC implements SellerDao {
     private Connection conn;
@@ -49,7 +52,8 @@ public class SellerDaoJDBC implements SellerDao {
             rs = pst.executeQuery();
 
             if(rs.next()) {
-                Seller seller = this.instantiateSeller(rs);
+                Department dep = this.instantiateDepartment(rs);
+                Seller seller = this.instantiateSeller(rs, dep);
 
                 return seller;
             }
@@ -64,18 +68,60 @@ public class SellerDaoJDBC implements SellerDao {
     }
 
     @Override
+    public List<Seller> findByDepartment(Department department) {
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        try {
+            pst = conn.prepareStatement(
+                    "SELECT seller.*, department.Name as DepName "
+                    + "FROM seller INNER JOIN department "
+                    + "ON seller.DepartmentId = department.Id "
+                    + "WHERE seller.DepartmentId = ? "
+                    + "ORDER BY Name"
+            );
+
+            pst.setInt(1, department.getId());
+
+            rs = pst.executeQuery();
+
+            List<Seller> sellers = new ArrayList<>();
+            Map<Integer, Department> map = new HashMap<>();
+
+            while(rs.next()) {
+                Department dep = map.get(rs.getInt("DepartmentId"));
+
+                if(dep == null) {
+                    dep = this.instantiateDepartment(rs);
+                    map.put(dep.getId(), dep);
+                }
+
+                sellers.add(this.instantiateSeller(rs, dep));
+            }
+
+            return sellers;
+        } catch(SQLException e) {
+            e.printStackTrace();
+            throw new DbException("Error while searching by Department Id");
+        } finally {
+            DB.closeResultSet(rs);
+            DB.closeStatement(pst);
+        }
+    }
+
+    @Override
     public List<Seller> findAll() {
         return null;
     }
 
-    private Seller instantiateSeller(ResultSet rs) throws SQLException {
+    private Seller instantiateSeller(ResultSet rs, Department dep) throws SQLException {
         return new Seller(
                 rs.getInt("Id"),
                 rs.getString("Name"),
                 rs.getString("Email"),
                 rs.getDate("BirthDate"),
                 rs.getDouble("BaseSalary"),
-                this.instantiateDepartment(rs)
+                dep
         );
     }
 
