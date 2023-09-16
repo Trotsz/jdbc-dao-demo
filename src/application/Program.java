@@ -1,14 +1,18 @@
 package application;
 
+import db.DbException;
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
 import model.entities.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Scanner;
 
 public class Program {
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
         SellerDao sdjdbc = DaoFactory.createSellerDao();
 
         System.out.println("==== TEST SELLER: Method findById ====");
@@ -44,5 +48,15 @@ public class Program {
         Seller seller3 = sdjdbc.findById(14);
         seller3.setBaseSalary(seller3.getBaseSalary() + 300.00);
         sdjdbc.update(seller3);
+        System.out.println("Updated row");
+
+        System.out.println("\n ==== TEST SELLER: Method deleteById ==== ");
+        System.out.println("Insert the ID to be deleted: ");
+        int id = sc.nextInt();
+
+        sdjdbc.deleteById(id);
+        System.out.println("Deleted row");
+
+        sc.close();
     }
 }
