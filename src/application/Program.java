@@ -1,18 +1,14 @@
 package application;
 
-import db.*;
-
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
 import model.entities.*;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 
 public class Program {
     public static void main(String[] args) {
-        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
-
         SellerDao sdjdbc = DaoFactory.createSellerDao();
 
         System.out.println("==== TEST SELLER: Method findById ====");
@@ -27,5 +23,21 @@ public class Program {
         for(Seller s : sdjdbc.findAll()) {
             System.out.println(s);
         }
+
+        System.out.println("\n ==== TEST SELLER: Method insert ==== ");
+        Department dep1 = new Department(3, "Fashion");
+        Seller seller2 = new Seller(
+                "Julia Souza",
+                "julia@gmail.com",
+                LocalDate.parse("2004-07-12"),
+                2340.00,
+                dep1
+        );
+        sdjdbc.insert(seller2);
+
+        System.out.println("New seller inserted, Id: " + seller2.getId());
+
+        sellers = sdjdbc.findAll();
+        sellers.forEach(System.out::println);
     }
 }

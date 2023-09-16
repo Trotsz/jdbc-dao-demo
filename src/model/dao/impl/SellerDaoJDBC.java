@@ -7,12 +7,15 @@ import model.entities.Department;
 import model.entities.Seller;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SellerDaoJDBC implements SellerDao {
+    private static final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private Connection conn;
 
     public SellerDaoJDBC(Connection conn) {
@@ -21,7 +24,39 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public void insert(Seller seller) {
+        PreparedStatement pst = null;
+        ResultSet rs = null;
 
+        try {
+            pst = conn.prepareStatement(
+                    "INSERT INTO seller (Name, Email, BirthDate, BaseSalary, DepartmentId) "
+                    + "VALUES (?, ?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS
+            );
+
+            pst.setString(1, seller.getName());
+            pst.setString(2, seller.getEmail());
+            pst.setDate(3, java.sql.Date.valueOf(seller.getBirthDate()));
+            pst.setDouble(4, seller.getBaseSalary());
+            pst.setInt(5, seller.getDepartment().getId());
+
+            int rows = pst.executeUpdate();
+
+            if(rows > 0) {
+                rs = pst.getGeneratedKeys();
+                if(rs.next()) {
+                    seller.setId(rs.getInt(1));
+                }
+            } else {
+                throw new DbException("Could not add new seller.");
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+            throw new DbException("Error while trying to add a new seller to the database.");
+        } finally {
+            DB.closeResultSet(rs);
+            DB.closeStatement(pst);
+        }
     }
 
     @Override
@@ -149,7 +184,7 @@ public class SellerDaoJDBC implements SellerDao {
                 rs.getInt("Id"),
                 rs.getString("Name"),
                 rs.getString("Email"),
-                rs.getDate("BirthDate"),
+                rs.getDate("BirthDate").toLocalDate(),
                 rs.getDouble("BaseSalary"),
                 dep
         );

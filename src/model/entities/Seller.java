@@ -2,21 +2,32 @@ package model.entities;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Seller implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private static final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     private Integer id;
     private String name;
     private String email;
-    private Date birthDate;
+    private LocalDate birthDate;
     private Double baseSalary;
 
     private Department department;
 
-    public Seller(int id, String name, String email, Date birthDate, double baseSalary, Department department) {
+    public Seller(String name, String email, LocalDate birthDate, double baseSalary, Department department) {
+        this.name = name;
+        this.email = email;
+        this.birthDate = birthDate;
+        this.baseSalary = baseSalary;
+        this.department = department;
+    }
+
+    public Seller(int id, String name, String email, LocalDate birthDate, double baseSalary, Department department) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -37,7 +48,7 @@ public class Seller implements Serializable {
         return this.email;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return this.birthDate;
     }
 
@@ -47,6 +58,10 @@ public class Seller implements Serializable {
 
     public Department getDepartment() {
         return this.department;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @Override
@@ -64,6 +79,6 @@ public class Seller implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Id: %s, Name: %s | Email: %s | Birth Date: %s | Base Salary: %.2f | Department Id: %d", this.getId(), this.getName(), this.getEmail(), new SimpleDateFormat("dd/MM/yyyy").format(this.getBirthDate()), this.getBaseSalary(), this.getDepartment().getId());
+        return String.format("Id: %s, Name: %s | Email: %s | Birth Date: %s | Base Salary: %.2f | Department Id: %d", this.getId(), this.getName(), this.getEmail(), fmt.format(this.getBirthDate()), this.getBaseSalary(), this.getDepartment().getId());
     }
 }
