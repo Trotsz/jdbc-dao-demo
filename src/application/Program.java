@@ -39,5 +39,10 @@ public class Program {
 
         sellers = sdjdbc.findAll();
         sellers.forEach(System.out::println);
+
+        System.out.println("\n ==== TEST SELLER: Method update ==== ");
+        Seller seller3 = sdjdbc.findById(14);
+        seller3.setBaseSalary(seller3.getBaseSalary() + 300.00);
+        sdjdbc.update(seller3);
     }
 }

@@ -7,7 +7,6 @@ import model.entities.Department;
 import model.entities.Seller;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +50,6 @@ public class SellerDaoJDBC implements SellerDao {
                 throw new DbException("Could not add new seller.");
             }
         } catch(SQLException e) {
-            e.printStackTrace();
             throw new DbException("Error while trying to add a new seller to the database.");
         } finally {
             DB.closeResultSet(rs);
@@ -61,7 +59,28 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public void update(Seller seller) {
+        PreparedStatement pst = null;
 
+        try {
+            pst = conn.prepareStatement(
+                    "UPDATE seller "
+                    + "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
+                    + "WHERE Id = ?"
+            );
+
+            pst.setString(1, seller.getName());
+            pst.setString(2, seller.getEmail());
+            pst.setDate(3, java.sql.Date.valueOf(seller.getBirthDate()));
+            pst.setDouble(4, seller.getBaseSalary());
+            pst.setInt(5, seller.getDepartment().getId());
+            pst.setInt(6, seller.getId());
+
+            pst.executeUpdate();
+        } catch(SQLException e) {
+            throw new DbException("Error: " + e.getMessage());
+        } finally {
+            DB.closeStatement(pst);
+        }
     }
 
     @Override
