@@ -57,6 +57,6 @@ public class Department implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Id: %s, Name: %s", this.getId(), this.getName());
+        return String.format("Id: %d, Name: %s", this.getId(), this.getName());
     }
 }

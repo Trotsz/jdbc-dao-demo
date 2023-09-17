@@ -98,6 +98,6 @@ public class Seller implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("Id: %s, Name: %s | Email: %s | Birth Date: %s | Base Salary: %.2f | Department Id: %d", this.getId(), this.getName(), this.getEmail(), fmt.format(this.getBirthDate()), this.getBaseSalary(), this.getDepartment().getId());
+        return String.format("Id: %d, Name: %s | Email: %s | Birth Date: %s | Base Salary: %.2f | Department Id: %d", this.getId(), this.getName(), this.getEmail(), fmt.format(this.getBirthDate()), this.getBaseSalary(), this.getDepartment().getId());
     }
 }

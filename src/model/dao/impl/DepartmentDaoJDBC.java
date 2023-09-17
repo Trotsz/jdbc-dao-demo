@@ -119,7 +119,6 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
             return null;
         } catch(SQLException e) {
-            e.printStackTrace();
             throw new DbException("Error while trying to find by id.");
         } finally {
             DB.closeResultSet(rs);
@@ -129,6 +128,28 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
     @Override
     public List<Department> findAll() {
-        return null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        List<Department> departs = new ArrayList<>();
+
+        try {
+            st = this.conn.createStatement();
+
+            rs = st.executeQuery(
+                    "SELECT * FROM department"
+            );
+
+            while(rs.next()) {
+                departs.add(new Department(rs.getInt("Id"), rs.getString("Name")));
+            }
+
+            return departs;
+        } catch(SQLException e) {
+            throw new DbException("Error while trying to find all departments.");
+        } finally {
+            DB.closeResultSet(rs);
+            DB.closeStatement(st);
+        }
     }
 }
