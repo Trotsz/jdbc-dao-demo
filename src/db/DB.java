@@ -17,8 +17,7 @@ public class DB {
 
                 conn = DriverManager.getConnection(url, props);
             } catch(SQLException e) {
-                e.printStackTrace();
-                throw new DbException("There was an error while trying to get connection with the database.");
+                throw new DbException("There was an error while trying to connect to the database");
             }
         }
 

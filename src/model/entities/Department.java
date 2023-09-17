@@ -11,12 +11,15 @@ public class Department implements Serializable {
     private Integer id;
     private String name;
 
-    private List<Seller> sellers;
+    private List<Seller> sellers = new ArrayList<>();
+
+    public Department(String name) {
+        this.name = name;
+    }
 
     public Department(Integer id, String name) {
         this.id = id;
         this.name = name;
-        this.sellers = new ArrayList<>();
     }
 
     public Integer getId() {
@@ -29,6 +32,14 @@ public class Department implements Serializable {
 
     public List<Seller> getSellers() {
         return this.sellers;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

@@ -27,7 +27,7 @@ public class SellerDaoJDBC implements SellerDao {
         ResultSet rs = null;
 
         try {
-            pst = conn.prepareStatement(
+            pst = this.conn.prepareStatement(
                     "INSERT INTO seller (Name, Email, BirthDate, BaseSalary, DepartmentId) "
                     + "VALUES (?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS
@@ -62,7 +62,7 @@ public class SellerDaoJDBC implements SellerDao {
         PreparedStatement pst = null;
 
         try {
-            pst = conn.prepareStatement(
+            pst = this.conn.prepareStatement(
                     "UPDATE seller "
                     + "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
                     + "WHERE Id = ?"
@@ -88,7 +88,7 @@ public class SellerDaoJDBC implements SellerDao {
         PreparedStatement pst = null;
 
         try {
-            pst = conn.prepareStatement(
+            pst = this.conn.prepareStatement(
                     "DELETE FROM seller "
                     + "WHERE Id = ?"
             );
@@ -146,7 +146,7 @@ public class SellerDaoJDBC implements SellerDao {
         ResultSet rs = null;
 
         try {
-            pst = conn.prepareStatement(
+            pst = this.conn.prepareStatement(
                     "SELECT seller.*, department.Name as DepName "
                     + "FROM seller INNER JOIN department "
                     + "ON seller.DepartmentId = department.Id "
@@ -175,7 +175,6 @@ public class SellerDaoJDBC implements SellerDao {
 
             return sellers;
         } catch(SQLException e) {
-            e.printStackTrace();
             throw new DbException("Error while searching by Department Id");
         } finally {
             DB.closeResultSet(rs);
