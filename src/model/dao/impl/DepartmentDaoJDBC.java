@@ -39,6 +39,8 @@ public class DepartmentDaoJDBC implements DepartmentDao {
                 if(rs.next()) {
                     department.setId(rs.getInt(1));
                 }
+            } else {
+                throw new DbException("There was an unexpected error and no rows were inserted.");
             }
         } catch(SQLException e) {
             throw new DbException("Error while inserting into table department");
@@ -62,7 +64,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
             pst.setString(1, department.getName());
             pst.setInt(2, department.getId());
 
-            int rows = pst.executeUpdate();
+            pst.executeUpdate();
         } catch(SQLException e) {
             throw new DbException("Error: " + e.getMessage());
         } finally {
