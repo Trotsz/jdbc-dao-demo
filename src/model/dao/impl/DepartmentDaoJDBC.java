@@ -2,9 +2,12 @@ package model.dao.impl;
 
 import db.*;
 import model.dao.DepartmentDao;
+import model.dao.SellerDao;
 import model.entities.Department;
+import model.entities.Seller;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DepartmentDaoJDBC implements DepartmentDao {
@@ -68,8 +71,31 @@ public class DepartmentDaoJDBC implements DepartmentDao {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Integer id, SellerDao sd) {
+        PreparedStatement pst = null;
 
+        try {
+            pst = this.conn.prepareStatement(
+                    "DELETE FROM department "
+                    + "WHERE Id = ?"
+            );
+
+            pst.setInt(1, id);
+
+            List<Seller> sellers = sd.findAll();
+
+            for(Seller seller : sellers) {
+                if(seller.getDepartment().getId().equals(id)) {
+                    throw new DbIntegrityException("The specified department is related to one or more existent sellers. Because of that, it cannot be deleted.");
+                }
+            }
+
+            pst.executeUpdate();
+        } catch(SQLException e) {
+            throw new DbException("Error while trying to delete department.");
+        } finally {
+            DB.closeStatement(pst);
+        }
     }
 
     @Override

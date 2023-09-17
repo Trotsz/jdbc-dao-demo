@@ -14,7 +14,7 @@ public class Program {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-//        SellerDao sdjdbc = DaoFactory.createSellerDao();
+        SellerDao sdjdbc = DaoFactory.createSellerDao();
 //
 //        System.out.println("==== TEST SELLER: Method findById ====");
 //        Seller seller1 = sdjdbc.findById(2);
@@ -67,10 +67,15 @@ public class Program {
         Department dep1 = ddjdbc.findById(3);
         System.out.println(dep1);
 
-        System.out.println(" ==== TEST DEPARTMENT: method update ==== ");
+        System.out.println("%n ==== TEST DEPARTMENT: method update ==== ");
         Department dep2 = ddjdbc.findById(6);
         dep2.setName("Psychology");
         ddjdbc.update(dep2);
+
+        System.out.println("%n ==== TEST DEPARTMENT: method deleteById ==== ");
+        System.out.print("Insert the id to be removed: ");
+        int id = sc.nextInt();
+        ddjdbc.deleteById(id, sdjdbc);
 
         sc.close();
     }
